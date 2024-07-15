@@ -2,6 +2,7 @@
 BetterPowerBarAltDB = BetterPowerBarAltDB or {}
 
 local PlayerPowerBarAlt = PlayerPowerBarAlt
+PlayerPowerBarAlt.ignoreFramePositionManager = true
 PlayerPowerBarAlt:SetMovable(true)
 PlayerPowerBarAlt:SetUserPlaced(true)
 
@@ -9,7 +10,18 @@ local locked = true
 local moving = nil
 local usurped = nil
 
-local overlay = CreateFrame("Frame", "BetterPowerBarAlt", PlayerPowerBarAlt)
+local function ApplySettings()
+	if BetterPowerBarAltDB.point then
+		PlayerPowerBarAlt:ClearAllPoints()
+		PlayerPowerBarAlt:SetPoint(BetterPowerBarAltDB.point, BetterPowerBarAltDB.x, BetterPowerBarAltDB.y)
+	end
+	if BetterPowerBarAltDB.scale then
+		PlayerPowerBarAlt:SetScale(BetterPowerBarAltDB.scale)
+	end
+end
+
+
+local overlay = CreateFrame("Frame", "BetterPowerBarAlt", PlayerPowerBarAlt, "BackdropTemplate")
 overlay:SetAllPoints()
 overlay:EnableMouse(true)
 
@@ -73,13 +85,7 @@ overlay:SetScript("OnShow", function()
 
 	local parent = PlayerPowerBarAlt:GetParent()
 	if parent == UIParent then
-		if BetterPowerBarAltDB.point then
-			PlayerPowerBarAlt:ClearAllPoints()
-			PlayerPowerBarAlt:SetPoint(BetterPowerBarAltDB.point, BetterPowerBarAltDB.x, BetterPowerBarAltDB.y)
-		end
-		if BetterPowerBarAltDB.scale then
-			PlayerPowerBarAlt:SetScale(BetterPowerBarAltDB.scale)
-		end
+		ApplySettings()
 	elseif not usurped then
 		usurped = true
 		local suspect = parent:GetName() or UNKNOWN
@@ -119,6 +125,14 @@ overlay:SetScript("OnLeave", function()
 	end
 	GameTooltip:Hide()
 end)
+
+if type(UnitPowerBarAlt_SetUp) == "function" then
+	hooksecurefunc("UnitPowerBarAlt_SetUp", function(bar)
+		if bar.isPlayerBar and bar:GetParent() == UIParent then
+			ApplySettings()
+		end
+	end)
+end
 
 -- uses a nonexistent cvar for controlling the text z.z
 -- which means I can't just set the cvar to make it behave
