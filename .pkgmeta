@@ -1,0 +1,6 @@
+package-as: BetterPowerBarAlt
+
+ignore:
+  - .gitignore
+  - .pkgmeta
+  - README.md
