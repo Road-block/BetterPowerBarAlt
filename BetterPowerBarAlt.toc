@@ -1,0 +1,8 @@
+## Interface: 80300
+## Title: BetterPowerBarAlt
+## Notes: Fancy up the PlayerPowerBarAlt frame
+## Author: Neb
+## Version: 1.5.6
+## SavedVariables: BetterPowerBarAltDB
+
+BetterPowerBarAlt.lua
